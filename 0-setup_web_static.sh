@@ -1,15 +1,23 @@
 #!/usr/bin/env bash
 #This script set up a server
 
-sudo apt get -y update
-sudo apt get -y install nginx
-mkdir -p /data/
-mkdir -p /data/web_static/
-mkdir -p /data/web_static/releases/
-mkdir -p /data/web_static/shared/
-mkdir -p /data/web_static/releases/test/
-touch -p /data/web_static/releases/test/index.html
-echo "Nginx don dey work" >> /data/web_static/releases/test/index.html
-rm /data/web_static/current
-ln -s /data/web_static/current /data/web_static/releases/test/
+sudo apt-get -y update
+sudo apt-get -y install nginx
+sudo mkdir -p /data/
+sudo mkdir -p /data/web_static/
+sudo mkdir -p /data/web_static/releases/
+sudo mkdir -p /data/web_static/shared/
+sudo mkdir -p /data/web_static/releases/test/
+sudo touch /data/web_static/releases/test/index.html
+sudo echo "Holberton School" > /data/web_static/releases/test/index.html
+sudo rm /data/web_static/current
+sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 sudo chown -R ubuntu:ubuntu /data/
+sudo sed -i '/server_name _/a add_header X-Served-By $HOSTNAME;' /etc/nginx/sites-available/default
+sudo sed -i '49,54d' /etc/nginx/sites-available/default
+sudo sed -i '48i\        location /hbnb_static/ {' /etc/nginx/sites-available/default
+sudo sed -i '49i\		alias /data/web_static/current/;' /etc/nginx/sites-available/default
+sudo sed -i '50i\		autoindex off;' /etc/nginx/sites-available/default
+sudo sed -i '51i\	}' /etc/nginx/sites-available/default
+sudo service nginx start
+sudo service nginx restart
